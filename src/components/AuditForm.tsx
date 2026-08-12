@@ -1,4 +1,18 @@
 import { useEffect } from 'react';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+
+const downloadPDF = async () => {
+  const element = document.querySelector('.wrap') as HTMLElement;
+  if (!element) return;
+  const canvas = await html2canvas(element, { scale: 2 });
+  const imgData = canvas.toDataURL('image/png');
+  const pdf = new jsPDF('p', 'mm', 'a4');
+  const imgWidth = 210;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+  pdf.save('auditoria.pdf');
+};
 
 const htmlES = `
 <div class="wrap">
@@ -6,7 +20,6 @@ const htmlES = `
     <h1>NEXTIA FLORIANÓPOLIS</h1>
     <p>Auditoría Gratuita de 30 Minutos — Posada Águas da Cachoeira</p>
   </section>
-
   <section class="card">
     <h2>Datos iniciales</h2>
     <div class="grid">
@@ -17,7 +30,6 @@ const htmlES = `
       <div><label>Teléfono / WhatsApp</label><input type="tel"></div>
     </div>
   </section>
-
   <section class="card">
     <h2>1. Entender el negocio</h2>
     <div class="q"><label>¿Cuántas habitaciones o unidades tienen?</label><input type="text"></div>
@@ -27,7 +39,6 @@ const htmlES = `
     <div class="q"><label>¿Cuál consideran que es hoy el principal problema de la posada?</label><textarea></textarea></div>
     <label>Notas</label><textarea></textarea>
   </section>
-
   <section class="card">
     <h2>2. Reservas y ventas</h2>
     <div class="q"><label>¿Por dónde reciben actualmente las reservas?</label>
@@ -46,7 +57,6 @@ const htmlES = `
     <div class="q"><label>¿Alguna vez pierden una reserva porque tardaron en responder?</label><textarea></textarea></div>
     <label>Notas</label><textarea></textarea>
   </section>
-
   <section class="card">
     <h2>3. WhatsApp</h2>
     <div class="q"><label>¿Utilizan WhatsApp Business?</label><input type="text"></div>
@@ -62,7 +72,6 @@ const htmlES = `
       <textarea></textarea>
     </div>
   </section>
-
   <section class="card">
     <h2>4. Atención al huésped</h2>
     <div class="q"><label>¿Cómo realizan actualmente el check-in?</label><textarea></textarea></div>
@@ -73,7 +82,6 @@ const htmlES = `
     <div class="q"><label>¿Envían algún mensaje después del check-out?</label><textarea></textarea></div>
     <div class="q"><label>¿Solicitan reseñas en Google, Booking u otras plataformas?</label><textarea></textarea></div>
   </section>
-
   <section class="card">
     <h2>5. Procesos internos</h2>
     <div class="q"><label>¿Cómo organizan la limpieza de las habitaciones?</label><textarea></textarea></div>
@@ -86,7 +94,6 @@ const htmlES = `
       <textarea></textarea>
     </div>
   </section>
-
   <section class="card">
     <h2>6. Marketing y recuperación de huéspedes</h2>
     <div class="q"><label>¿Tienen una base de datos de antiguos huéspedes?</label><input type="text"></div>
@@ -97,7 +104,6 @@ const htmlES = `
     <div class="q"><label>¿Realizan publicidad paga?</label><input type="text"></div>
     <div class="q"><label>¿Tienen alguna estrategia para conseguir más reservas directas y depender menos de las plataformas?</label><textarea></textarea></div>
   </section>
-
   <section class="card">
     <h2>7. Automatización e Inteligencia Artificial</h2>
     <div class="q"><label>¿Utilizan actualmente alguna automatización?</label><textarea></textarea></div>
@@ -107,7 +113,6 @@ const htmlES = `
     <div class="q"><label>¿Les interesaría que el sistema recopilara automáticamente fechas, cantidad de huéspedes y datos de contacto antes de pasar la conversación a una persona?</label><textarea></textarea></div>
     <div class="q"><label>¿Qué procesos NO quisieran automatizar y prefieren mantener con atención humana?</label><textarea></textarea></div>
   </section>
-
   <section class="card">
     <h2>8. Objetivos</h2>
     <div class="q"><label>1. Primera mejora prioritaria</label><input type="text"></div>
@@ -115,7 +120,6 @@ const htmlES = `
     <div class="q"><label>3. Tercera mejora prioritaria</label><input type="text"></div>
     <div class="q"><label>Si dentro de tres meses esta implementación fuera un éxito, ¿qué tendría que haber mejorado para que dijeran “valió la pena”?</label><textarea></textarea></div>
   </section>
-
   <section class="card">
     <h2>9. Diagnóstico NextIA</h2>
     <div class="q"><label>Problema principal detectado</label><textarea></textarea></div>
@@ -125,7 +129,6 @@ const htmlES = `
     <div class="q"><label>Prioridad</label><select><option>Alta</option><option>Media</option><option>Baja</option></select></div>
     <div class="q"><label>Solución recomendada</label><textarea></textarea></div>
   </section>
-
   <section class="card">
     <h2>Pregunta de cierre</h2>
     <div class="key">
@@ -142,12 +145,11 @@ const htmlES = `
       <label><input type="checkbox"> Agendar segunda reunión</label>
     </div>
     <div class="actions" style="display:flex; gap:12px; justify-content:flex-end; margin-top:24px; flex-wrap:wrap;">
-      <button class="secondary" style="background:#e5e7eb; color:#111827; border:0; border-radius:10px; padding:12px 18px; cursor:pointer; font-weight:700;" onclick="window.print()">Imprimir / Guardar PDF</button>
+      <button class="secondary" style="background:#e5e7eb; color:#111827; border:0; border-radius:10px; padding:12px 18px; cursor:pointer; font-weight:700;" onclick="window.downloadPDF()">Descargar PDF</button>
       <button class="secondary" style="background:#e5e7eb; color:#111827; border:0; border-radius:10px; padding:12px 18px; cursor:pointer; font-weight:700;" onclick="window.location.href='mailto:sebastianzoth@gmail.com?subject=Nueva Auditoría'">Enviar por Email</button>
-      <button class="primary" style="background:#0f766e; color:#fff; border:0; border-radius:10px; padding:12px 18px; cursor:pointer; font-weight:700;" onclick="alert('Complete el formulario y use Imprimir / Guardar PDF para conservar una copia.')">Finalizar auditoría</button>
+      <button class="primary" style="background:#0f766e; color:#fff; border:0; border-radius:10px; padding:12px 18px; cursor:pointer; font-weight:700;" onclick="alert('Complete el formulario y use Descargar PDF para conservar una copia.')">Finalizar auditoría</button>
     </div>
   </section>
-
   <div class="footer">NextIA Florianópolis — Auditoría de automatización, reservas y atención al huésped.</div>
 </div>
 `;
@@ -158,7 +160,6 @@ const htmlPT = `
     <h1>NEXTIA FLORIANÓPOLIS</h1>
     <p>Auditoria Gratuita de 30 Minutos — Pousada Águas da Cachoeira</p>
   </section>
-
   <section class="card">
     <h2>Dados iniciais</h2>
     <div class="grid">
@@ -169,7 +170,6 @@ const htmlPT = `
       <div><label>Telefone / WhatsApp</label><input type="tel"></div>
     </div>
   </section>
-
   <section class="card">
     <h2>1. Entender o negócio</h2>
     <div class="q"><label>Quantos quartos ou unidades vocês têm?</label><input type="text"></div>
@@ -179,7 +179,6 @@ const htmlPT = `
     <div class="q"><label>Qual vocês consideram hoje o principal problema da pousada?</label><textarea></textarea></div>
     <label>Notas</label><textarea></textarea>
   </section>
-
   <section class="card">
     <h2>2. Reservas e vendas</h2>
     <div class="q"><label>Por onde vocês recebem as reservas atualmente?</label>
@@ -198,7 +197,6 @@ const htmlPT = `
     <div class="q"><label>Alguma vez perderam uma reserva por demora na resposta?</label><textarea></textarea></div>
     <label>Notas</label><textarea></textarea>
   </section>
-
   <section class="card">
     <h2>3. WhatsApp</h2>
     <div class="q"><label>Vocês usam WhatsApp Business?</label><input type="text"></div>
@@ -214,7 +212,6 @@ const htmlPT = `
       <textarea></textarea>
     </div>
   </section>
-
   <section class="card">
     <h2>4. Atendimento ao hóspede</h2>
     <div class="q"><label>Como fazem o check-in atualmente?</label><textarea></textarea></div>
@@ -225,7 +222,6 @@ const htmlPT = `
     <div class="q"><label>Enviam alguma mensagem após o check-out?</label><textarea></textarea></div>
     <div class="q"><label>Pedem avaliações no Google, Booking ou outras plataformas?</label><textarea></textarea></div>
   </section>
-
   <section class="card">
     <h2>5. Processos internos</h2>
     <div class="q"><label>Como organizam a limpeza dos quartos?</label><textarea></textarea></div>
@@ -238,7 +234,6 @@ const htmlPT = `
       <textarea></textarea>
     </div>
   </section>
-
   <section class="card">
     <h2>6. Marketing e recuperação de hóspedes</h2>
     <div class="q"><label>Têm uma base de dados de hóspedes antigos?</label><input type="text"></div>
@@ -247,9 +242,8 @@ const htmlPT = `
     <div class="q"><label>Realizam promoções para baixa temporada?</label><input type="text"></div>
     <div class="q"><label>Usam Instagram e Facebook regularmente?</label><input type="text"></div>
     <div class="q"><label>Fazem anúncios pagos?</label><input type="text"></div>
-    <div class="q"><label>Têm alguma estratégia para conseguir mais reservas diretas e depender menos das plataformas?</label><textarea></textarea></div>
+    <div class="q"><label>Têm alguma estratégia para conseguir mais reservas diretas e depender menos de las plataformas?</label><textarea></textarea></div>
   </section>
-
   <section class="card">
     <h2>7. Automatização e Inteligência Artificial</h2>
     <div class="q"><label>Usam atualmente alguma automatização?</label><textarea></textarea></div>
@@ -259,7 +253,6 @@ const htmlPT = `
     <div class="q"><label>Gostariam que o sistema coletasse automaticamente datas, quantidade de hóspedes e dados de contato antes de passar a conversa para uma pessoa?</label><textarea></textarea></div>
     <div class="q"><label>Quais processos NÃO gostariam de automatizar e preferem manter com atendimento humano?</label><textarea></textarea></div>
   </section>
-
   <section class="card">
     <h2>8. Objetivos</h2>
     <div class="q"><label>1. Primeira melhoria prioritária</label><input type="text"></div>
@@ -267,24 +260,22 @@ const htmlPT = `
     <div class="q"><label>3. Terceira melhoria prioritária</label><input type="text"></div>
     <div class="q"><label>Se dentro de três meses esta implementação fosse um sucesso, o que teria que ter melhorado para que dissessem “valeu a pena”?</label><textarea></textarea></div>
   </section>
-
   <section class="card">
     <h2>9. Diagnóstico NextIA</h2>
     <div class="q"><label>Problema principal detectado</label><textarea></textarea></div>
     <div class="q"><label>Oportunidade Nº1</label><textarea></textarea></div>
     <div class="q"><label>Oportunidade Nº2</label><textarea></textarea></div>
     <div class="q"><label>Oportunidade Nº3</label><textarea></textarea></div>
-    <div class="q"><label>Prioridade</label><select><option>Alta</option><option>Média</option><option>Baixa</option></select></div>
+    <div class="q"><label>Prioridad</label><select><option>Alta</option><option>Média</option><option>Baixa</option></select></div>
     <div class="q"><label>Solução recomendada</label><textarea></textarea></div>
   </section>
-
   <section class="card">
     <h2>Pergunta de encerramento</h2>
     <div class="key">
       <label>“De tudo o que conversamos, se pudéssemos solucionar apenas um problema durante as próximas semanas, qual teria maior impacto para vocês?”</label>
       <textarea></textarea>
     </div>
-    <h2 style="margin-top:24px">Próximo passo</h2>
+    <h2 style="margin-top:24px">Próximo paso</h2>
     <div class="opts">
       <label><input type="checkbox"> Enviar diagnóstico</label>
       <label><input type="checkbox"> Preparar proposta</label>
@@ -294,12 +285,11 @@ const htmlPT = `
       <label><input type="checkbox"> Agendar segunda reunião</label>
     </div>
     <div class="actions" style="display:flex; gap:12px; justify-content:flex-end; margin-top:24px; flex-wrap:wrap;">
-      <button class="secondary" style="background:#e5e7eb; color:#111827; border:0; border-radius:10px; padding:12px 18px; cursor:pointer; font-weight:700;" onclick="window.print()">Imprimir / Salvar PDF</button>
+      <button class="secondary" style="background:#e5e7eb; color:#111827; border:0; border-radius:10px; padding:12px 18px; cursor:pointer; font-weight:700;" onclick="window.downloadPDF()">Baixar PDF</button>
       <button class="secondary" style="background:#e5e7eb; color:#111827; border:0; border-radius:10px; padding:12px 18px; cursor:pointer; font-weight:700;" onclick="window.location.href='mailto:sebastianzoth@gmail.com?subject=Nova Auditoria'">Enviar por Email</button>
-      <button class="primary" style="background:#0f766e; color:#fff; border:0; border-radius:10px; padding:12px 18px; cursor:pointer; font-weight:700;" onclick="alert('Complete o formulário e use Imprimir / Salvar PDF para guardar uma cópia.')">Finalizar auditoria</button>
+      <button class="primary" style="background:#0f766e; color:#fff; border:0; border-radius:10px; padding:12px 18px; cursor:pointer; font-weight:700;" onclick="alert('Complete o formulário e use Baixar PDF para guardar uma cópia.')">Finalizar auditoria</button>
     </div>
   </section>
-
   <div class="footer">NextIA Florianópolis — Auditoria de automação, reservas e atendimento ao hóspede.</div>
 </div>
 `;
@@ -308,6 +298,7 @@ export default function AuditForm({ lang }: { lang: 'es' | 'pt' }) {
   const htmlContent = lang === 'pt' ? htmlPT : htmlES;
 
   useEffect(() => {
+    (window as any).downloadPDF = downloadPDF;
     const styleId = 'audit-form-styles';
     if (!document.getElementById(styleId)) {
       const style = document.createElement('style');
@@ -353,6 +344,7 @@ export default function AuditForm({ lang }: { lang: 'es' | 'pt' }) {
     return () => {
       const style = document.getElementById(styleId);
       if (style) document.head.removeChild(style);
+      (window as any).downloadPDF = undefined;
     };
   }, []);
 
