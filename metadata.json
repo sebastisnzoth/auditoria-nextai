@@ -1,0 +1,6 @@
+{
+  "name": "Logo Creator",
+  "description": "Design and animate your company logo.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
